@@ -1,12 +1,12 @@
 # bencode
 
 Strict, dependency-free [BitTorrent bencode][1] encoder and decoder for
-Python 3.8+. Round-trips are exact: the decoder rejects every
+Python 3.10+. Round-trips are exact: the decoder rejects every
 non-canonical encoding (leading zeros, `i-0e`, dict keys out of order or
 duplicated, trailing data after a value), and the encoder emits dict
 keys sorted lexicographically by raw bytes.
 
-[1]: https://wiki.theory.org/BitTorrentSpecification#Bencoding
+[1]: https://www.bittorrent.org/beps/bep_0003.html#bencoding
 
 ## Install
 
@@ -141,13 +141,28 @@ If you want a forgiving parser, this isn't it.
 ## Running tests
 
 ```bash
-pip install pytest pytest-cov mypy
-PYTHONPATH=src pytest --cov=bencode --cov-branch
+pip install -e ".[dev]"
+ruff check .
 mypy --strict src/bencode
+pytest --cov=bencode --cov-branch --cov-report=term-missing --cov-fail-under=100
 ```
 
 The bundled suite has 106 tests: 100% line + 100% branch coverage on
 all four source modules.
+
+## Quality bar
+
+`bencode` is held to the strict path because malformed torrent metadata
+can change hashes, break interoperability, or waste client time.
+
+- CI runs on Python 3.10, 3.11, and 3.12.
+- `ruff check .` is blocking.
+- `mypy --strict src/bencode` is blocking.
+- `pytest --cov=bencode --cov-branch --cov-report=term-missing --cov-fail-under=100`
+  is blocking.
+- Package builds are smoke-tested before release.
+- The repository includes [QUALITY.md](QUALITY.md), [CONTRIBUTING.md](CONTRIBUTING.md),
+  and [SECURITY.md](SECURITY.md) so users can inspect the maintenance bar.
 
 ## License
 

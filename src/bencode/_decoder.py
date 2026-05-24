@@ -7,7 +7,8 @@ detected.  No silent recovery, no best-effort parsing.
 
 from __future__ import annotations
 
-from typing import Any, Iterator, Tuple, Union
+from collections.abc import Iterator
+from typing import Any
 
 from ._errors import (
     DecodeError,
@@ -20,7 +21,7 @@ from ._errors import (
 
 __all__ = ["decode", "decode_partial", "iter_decode"]
 
-_BytesIn = Union[bytes, bytearray, memoryview]
+_BytesIn = bytes | bytearray | memoryview
 
 
 def decode(data: _BytesIn) -> Any:
@@ -39,7 +40,7 @@ def decode(data: _BytesIn) -> Any:
     return value
 
 
-def decode_partial(data: _BytesIn, *, offset: int = 0) -> Tuple[Any, int]:
+def decode_partial(data: _BytesIn, *, offset: int = 0) -> tuple[Any, int]:
     """Decode one value starting at ``offset``; return ``(value, end)``.
 
     ``end`` is the position immediately after the consumed value, so
@@ -80,7 +81,7 @@ def _coerce(data: _BytesIn) -> bytes:
     )
 
 
-def _decode_at(buf: bytes, offset: int) -> Tuple[Any, int]:
+def _decode_at(buf: bytes, offset: int) -> tuple[Any, int]:
     if offset >= len(buf):
         raise TruncatedError("unexpected end of input", offset=offset)
     head = buf[offset:offset + 1]
@@ -97,7 +98,7 @@ def _decode_at(buf: bytes, offset: int) -> Tuple[Any, int]:
     )
 
 
-def _decode_integer(buf: bytes, offset: int) -> Tuple[int, int]:
+def _decode_integer(buf: bytes, offset: int) -> tuple[int, int]:
     end = buf.find(b"e", offset + 1)
     if end == -1:
         raise TruncatedError(
@@ -128,7 +129,7 @@ def _validate_integer_body(body: bytes, offset: int) -> None:
         )
 
 
-def _decode_string(buf: bytes, offset: int) -> Tuple[bytes, int]:
+def _decode_string(buf: bytes, offset: int) -> tuple[bytes, int]:
     colon = buf.find(b":", offset)
     if colon == -1:
         raise InvalidStringError(
@@ -159,7 +160,7 @@ def _parse_string_length(length_bytes: bytes, offset: int) -> int:
     return int(length_bytes)
 
 
-def _decode_list(buf: bytes, offset: int) -> Tuple[list[Any], int]:
+def _decode_list(buf: bytes, offset: int) -> tuple[list[Any], int]:
     pos = offset + 1
     items: list[Any] = []
     while True:
@@ -173,7 +174,7 @@ def _decode_list(buf: bytes, offset: int) -> Tuple[list[Any], int]:
         items.append(item)
 
 
-def _decode_dict(buf: bytes, offset: int) -> Tuple[dict[bytes, Any], int]:
+def _decode_dict(buf: bytes, offset: int) -> tuple[dict[bytes, Any], int]:
     pos = offset + 1
     out: dict[bytes, Any] = {}
     last_key: bytes | None = None
@@ -192,7 +193,7 @@ def _read_dict_pair(
     pos: int,
     last_key: bytes | None,
     out: dict[bytes, Any],
-) -> Tuple[bytes, int]:
+) -> tuple[bytes, int]:
     if not buf[pos:pos + 1].isdigit():
         raise InvalidDictError(
             f"dict key must be a byte string, got {buf[pos:pos + 1]!r}",

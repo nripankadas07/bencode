@@ -11,13 +11,13 @@ from __future__ import annotations
 
 __all__ = [
     "BencodeError",
-    "EncodeError",
     "DecodeError",
-    "TruncatedError",
+    "EncodeError",
+    "InvalidDictError",
     "InvalidIntegerError",
     "InvalidStringError",
-    "InvalidDictError",
     "TrailingDataError",
+    "TruncatedError",
 ]
 
 

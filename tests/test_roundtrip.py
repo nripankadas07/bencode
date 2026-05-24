@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
 import pytest
 
 from bencode import decode, encode
 
-_PRIMITIVES: List[Any] = [
+_PRIMITIVES: list[Any] = [
     0,
     1,
     -1,
@@ -22,7 +22,7 @@ _PRIMITIVES: List[Any] = [
     b"a" * 1024,
 ]
 
-_CONTAINERS: List[Any] = [
+_CONTAINERS: list[Any] = [
     [],
     [1, 2, 3],
     [b"a", [b"b", [b"c", []]]],

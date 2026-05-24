@@ -47,18 +47,18 @@ from ._errors import (
 )
 
 __all__ = [
-    "encode",
-    "decode",
-    "decode_partial",
-    "iter_decode",
     "BencodeError",
-    "EncodeError",
     "DecodeError",
-    "TruncatedError",
+    "EncodeError",
+    "InvalidDictError",
     "InvalidIntegerError",
     "InvalidStringError",
-    "InvalidDictError",
     "TrailingDataError",
+    "TruncatedError",
+    "decode",
+    "decode_partial",
+    "encode",
+    "iter_decode",
 ]
 
 __version__ = "0.1.0"

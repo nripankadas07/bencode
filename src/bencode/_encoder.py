@@ -16,14 +16,15 @@ logical structure.
 
 from __future__ import annotations
 
-from typing import Any, Sequence, Union
+from collections.abc import Sequence
+from typing import Any
 
 from ._errors import EncodeError
 
 __all__ = ["encode"]
 
 _BytesLike = (bytes, bytearray, memoryview)
-_PathPart = Union[int, bytes]
+_PathPart = int | bytes
 
 
 def encode(value: Any) -> bytes:
@@ -73,7 +74,7 @@ def _encode_sequence(
 ) -> None:
     parts.append(b"l")
     for index, item in enumerate(value):
-        _encode_into(item, parts, path + (index,))
+        _encode_into(item, parts, (*path, index))
     parts.append(b"e")
 
 
@@ -84,7 +85,7 @@ def _encode_mapping(
     parts.append(b"d")
     for key, item in items:
         parts.append(str(len(key)).encode("ascii") + b":" + key)
-        _encode_into(item, parts, path + (key,))
+        _encode_into(item, parts, (*path, key))
     parts.append(b"e")
 
 
