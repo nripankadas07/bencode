@@ -11,7 +11,7 @@ keys sorted lexicographically by raw bytes.
 ## Install
 
 ```bash
-pip install bencode
+python -m pip install -e .
 ```
 
 Or from a clone:
